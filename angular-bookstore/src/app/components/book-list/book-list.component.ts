@@ -30,7 +30,7 @@ export class BookListComponent implements OnInit {
     }
     else
     {
-      this.currentCategoryId = 1;
+      this.currentCategoryId = 3;
     }
     this._bookService.getBooks(this.currentCategoryId).subscribe(
       data => this.books = data
