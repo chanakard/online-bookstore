@@ -38,6 +38,12 @@ map(response =>  response._embedded.bookCategory)
   private getBookList(searchUrl: string): Observable<Book[]> {
     return this.httpClient.get<getResponseBooks>(searchUrl).pipe(map(response => response._embedded.books));
   }
+
+  getBookInfo(bookId:number) : Observable<Book>
+  {
+      const bookDetailsUrl = `${this.baseUrl}/${bookId}`;
+      return this.httpClient.get<Book>(bookDetailsUrl);
+  }
 }
 
 interface getResponseBooks

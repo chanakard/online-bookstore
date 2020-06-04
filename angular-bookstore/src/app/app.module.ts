@@ -9,11 +9,16 @@ import { RouterModule,Routes} from '@angular/router';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { BookCategoryComponent } from './components/book-category/book-category.component';
 import { SearchComponent } from './components/search/search.component';
+import { BookDetailsComponent } from './component/book-details/book-details.component';
 
 const routes:Routes = [
   {
     path : 'books',
     component : BookListComponent
+  },
+  {
+    path : 'books/:id',
+    component : BookDetailsComponent
   },
   {
     path : 'search/:keyword',
@@ -40,7 +45,8 @@ const routes:Routes = [
     BookListComponent,
     PageNotFoundComponent,
     BookCategoryComponent,
-    SearchComponent
+    SearchComponent,
+    BookDetailsComponent
   ],
   imports: [
     BrowserModule,HttpClientModule,RouterModule.forRoot(routes)
