@@ -2,6 +2,7 @@ import { BookService } from './../../services/book.service';
 import { Book } from './../../common/book';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NgbPaginationConfig} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-book-list',
@@ -11,10 +12,20 @@ import { ActivatedRoute } from '@angular/router';
 export class BookListComponent implements OnInit {
 
   books: Book[];
-  currentCategoryId: number;
-  searchMode: boolean;
+  currentCategoryId: number=1;
+  searchMode: boolean=false;
+  previouseCategoryId:number=1;
 
-  constructor(private _bookService: BookService, private _activatedRoutes: ActivatedRoute) { }
+  //new properties for server side paging
+  currentPage:number=0;
+  pageSize:number=2;
+  totalRecords:number=0;
+
+
+
+  constructor(private _bookService: BookService, private _activatedRoutes: ActivatedRoute, private _ngbPagConfig : NgbPaginationConfig) {
+    this._ngbPagConfig.maxSize = 3;
+   }
 
   ngOnInit(): void {
     this._activatedRoutes.paramMap.subscribe(() =>
@@ -39,24 +50,49 @@ export class BookListComponent implements OnInit {
       this.currentCategoryId = +this._activatedRoutes.snapshot.paramMap.get('id');
     }
     else {
-      this.currentCategoryId = 3;
+      this.currentCategoryId = 1;
     }
-    this._bookService.getBooks(this.currentCategoryId).subscribe(
-      data => this.books = data
+
+    if(this.previouseCategoryId != this.currentCategoryId){
+        this.currentPage=1;
+    }
+
+    //setting up the page number to one if the user navidate to a different category
+    this.previouseCategoryId=this.currentCategoryId;
+
+    this._bookService.getBooks(this.currentCategoryId,this.currentPage-1,this.pageSize).subscribe(
+      this.processPaginate()
     );
   }
 
 
   handleSearchBook() {
-
+ 
     const Keyword: string = this._activatedRoutes.snapshot.paramMap.get('keyword');
 
 
-    this._bookService.searchBooks(Keyword).subscribe(
-      data => 
-      {this.books = data;
-      console.log(data);}
+    this._bookService.searchBooks(Keyword, this.currentPage -1,this.pageSize).subscribe(
+      this.processPaginate()
     );
   }
 
+
+
+  updatePageSize(pageSize:number)
+  {
+    this.pageSize=pageSize;
+    this.listBooks();
+  }
+
+  processPaginate()
+  {
+    return data => {
+      this.books = data._embedded.books;
+
+      //page number starts from 1 index here
+      this.currentPage = data.page.number+1;
+      this.totalRecords = data.page.totalElements;
+      this.pageSize = data.page.size;
+    }
+  }
 }

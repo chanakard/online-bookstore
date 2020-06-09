@@ -14,10 +14,11 @@ export class BookService {
   private categoryUrl = "http://localhost:8080/api/v1/book-category";
   constructor(private httpClient:HttpClient) { }
 
-  getBooks(theCategoryId : number) : Observable<Book[]>
+  getBooks(theCategoryId : number, currenPage:number, pageSize:number) : Observable<getResponseBooks>
   {
-    const searchUrl = `${this.baseUrl}/search/categoryid?id=${theCategoryId}`;
-    return this.getBookList(searchUrl);
+    const searchUrl = `${this.baseUrl}/search/categoryid?id=${theCategoryId}&page=${currenPage}&size=${pageSize}`;
+    console.log('searchUrl'+searchUrl);
+    return this.httpClient.get<getResponseBooks>(searchUrl);
   }
 
 
@@ -29,10 +30,10 @@ map(response =>  response._embedded.bookCategory)
   }
 
 
-  searchBooks(keyword : string) : Observable<Book[]>
+  searchBooks(keyword : string,currentPage:number, pageSize:number) : Observable<getResponseBooks>
   {
-    const searchUrl = `${this.baseUrl}/search/searchbykeyword?name=${keyword}`;
-    return this.getBookList(searchUrl);
+    const searchUrl = `${this.baseUrl}/search/searchbykeyword?name=${keyword}&page=${currentPage}&size=${pageSize}`;
+    return this.httpClient.get<getResponseBooks>(searchUrl);
   }
 
   private getBookList(searchUrl: string): Observable<Book[]> {
@@ -50,6 +51,12 @@ interface getResponseBooks
 {
   _embedded:{
     books:Book[]
+  },
+  page:{    
+    size:number,
+    totalElements:number,
+    totalPages:number,
+    number:number
   }
 }
 
@@ -58,5 +65,5 @@ interface getResponseBookCategory
 {
   _embedded:{
     bookCategory:BookCategory[]
-  }
+  }  
 }
