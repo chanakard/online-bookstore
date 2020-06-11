@@ -12,9 +12,17 @@ import { BookCategoryComponent } from './components/book-category/book-category.
 import { SearchComponent } from './components/search/search.component';
 import { BookDetailsComponent } from './component/book-details/book-details.component';
 import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { CartStatusComponent } from './components/cart-status/cart-status.component';
+import { NgxSpinnerModule} from 'ngx-spinner';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CartDetailsComponent } from './components/cart-details/cart-details.component';
 
  
 const routes:Routes = [
+  {
+    path : 'cart-details',
+    component : CartDetailsComponent
+  },
   {
     path : 'books',
     component : BookListComponent
@@ -50,10 +58,12 @@ const routes:Routes = [
     BookCategoryComponent,
     SearchComponent,
     BookDetailsComponent,
-    JwPaginationComponent
+    JwPaginationComponent,
+    CartStatusComponent,
+    CartDetailsComponent
   ],
   imports: [
-    BrowserModule,HttpClientModule,RouterModule.forRoot(routes),NgbModule
+    BrowserModule,HttpClientModule,RouterModule.forRoot(routes),NgbModule,NgxSpinnerModule,BrowserAnimationsModule
   ],
   providers: [BookService],
   bootstrap: [AppComponent]

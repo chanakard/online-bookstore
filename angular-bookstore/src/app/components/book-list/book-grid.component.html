@@ -1,3 +1,7 @@
+<ngx-spinner type="ball-spin-clockwise" size="default" bdColor="rgba(51,51,51,0.8)">
+
+<p style="color:white;">Please wait...</p>
+</ngx-spinner>
 <div class="row">
 
   <div class="col-lg-3">
@@ -24,12 +28,12 @@
             <p class="card-text">{{book.description}}</p>
           </div>
           <div class="card-footer">
-            <button class="btn btn-primary float-right">Add to Cart</button>
+            <button class="btn btn-primary float-right" (click)="addToCart(book)">Add to Cart</button>
           </div>
         </div>
       </div>
 
-      <div *ngIf="books?.length == 0">
+      <div *ngIf="books?.length == 0 && !books">
 
         <div class="col-md-12 alert alert-warning mt-3">
           No books found
@@ -37,37 +41,40 @@
 
 
       </div>
-      <div class="row">
-        <div class="col-md-6">
+      <div *ngIf="books?.length > 0">
 
-          <div class="row">
-            <div class="col-md-5"><span class="ml-2">Page size:</span></div>
-            <div class="col-md-7">
-              <select (change)="updatePageSize($event.target.value)" class="form-control-sm" style="width:50%">
-                <option selected>
-
-                  5
-                </option>
-                <option>
-
-                  10
-                </option>
-              </select>
+        <div class="row">
+          <div class="col-md-6">
+  
+            <div class="row">
+              <div class="col-md-5"><span class="ml-2">Page size:</span></div>
+              <div class="col-md-7">
+                <select (change)="updatePageSize($event.target.value)" class="form-control-sm" style="width:50%">
+                  <option selected>
+  
+                    5
+                  </option>
+                  <option>
+  
+                    10
+                  </option>
+                </select>
+              </div>
             </div>
           </div>
+          <div class="col-md-6">
+  
+            <!--Pagination selector-->
+            <ngb-pagination class="d-flex justify-content-end"
+    [(page)]="currentPage"
+    [pageSize]="pageSize"
+    [collectionSize]="totalRecords" (pageChange)="listBooks()">
+    <ng-template ngbPaginationPrevious>Prev</ng-template>
+    <ng-template ngbPaginationNext>Next</ng-template>
+  </ngb-pagination>
+          </div>
+  
         </div>
-        <div class="col-md-6">
-
-          <!--Pagination selector-->
-          <ngb-pagination class="d-flex justify-content-end"
-  [(page)]="currentPage"
-  [pageSize]="pageSize"
-  [collectionSize]="totalRecords" (pageChange)="listBooks()">
-  <ng-template ngbPaginationPrevious>Prev</ng-template>
-  <ng-template ngbPaginationNext>Next</ng-template>
-</ngb-pagination>
-        </div>
-
       </div>
 
       <!-- /.row -->

@@ -1,8 +1,11 @@
+import { CartService } from './../../services/cart.service';
 import { BookService } from './../../services/book.service';
 import { Book } from './../../common/book';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbPaginationConfig} from '@ng-bootstrap/ng-bootstrap';
+import { CartItem } from 'src/app/common/cart-item';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-book-list',
@@ -23,7 +26,7 @@ export class BookListComponent implements OnInit {
 
 
 
-  constructor(private _bookService: BookService, private _activatedRoutes: ActivatedRoute, private _ngbPagConfig : NgbPaginationConfig) {
+  constructor(private _bookService: BookService, private _activatedRoutes: ActivatedRoute, private _ngbPagConfig : NgbPaginationConfig, private _catService:CartService, private _ngxSpinnerService:NgxSpinnerService) {
     this._ngbPagConfig.maxSize = 3;
    }
 
@@ -33,6 +36,10 @@ export class BookListComponent implements OnInit {
   }
 
   listBooks() {
+
+    //starts the loader
+    this._ngxSpinnerService.show();
+
     this.searchMode = this._activatedRoutes.snapshot.paramMap.has('keyword');
 
     if (this.searchMode) {
@@ -87,6 +94,22 @@ export class BookListComponent implements OnInit {
   processPaginate()
   {
     return data => {
+
+      /*setTimeout(() =>{
+        //stops the loader
+      this._ngxSpinnerService.hide();
+
+      this.books = data._embedded.books;
+
+      //page number starts from 1 index here
+      this.currentPage = data.page.number+1;
+      this.totalRecords = data.page.totalElements;
+      this.pageSize = data.page.size;
+      },3000);*/
+
+      //stops the loader
+      this._ngxSpinnerService.hide();
+
       this.books = data._embedded.books;
 
       //page number starts from 1 index here
@@ -94,5 +117,11 @@ export class BookListComponent implements OnInit {
       this.totalRecords = data.page.totalElements;
       this.pageSize = data.page.size;
     }
+  }
+
+  addToCart(book:Book)
+  {
+    const cartItem = new CartItem(book);
+    this._catService.addToCart(cartItem);
   }
 }
