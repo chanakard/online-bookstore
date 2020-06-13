@@ -16,9 +16,15 @@ import { CartStatusComponent } from './components/cart-status/cart-status.compon
 import { NgxSpinnerModule} from 'ngx-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CartDetailsComponent } from './components/cart-details/cart-details.component';
+import { CheckoutComponent } from './components/checkout/checkout.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
  
 const routes:Routes = [
+  {
+    path : 'check-out',
+    component : CheckoutComponent
+  },
   {
     path : 'cart-details',
     component : CartDetailsComponent
@@ -60,10 +66,11 @@ const routes:Routes = [
     BookDetailsComponent,
     JwPaginationComponent,
     CartStatusComponent,
-    CartDetailsComponent
+    CartDetailsComponent,
+    CheckoutComponent
   ],
   imports: [
-    BrowserModule,HttpClientModule,RouterModule.forRoot(routes),NgbModule,NgxSpinnerModule,BrowserAnimationsModule
+    BrowserModule,HttpClientModule,RouterModule.forRoot(routes),NgbModule,NgxSpinnerModule,BrowserAnimationsModule,ReactiveFormsModule
   ],
   providers: [BookService],
   bootstrap: [AppComponent]
